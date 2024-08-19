@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -92,6 +93,22 @@ public class RequestParamController {
             @RequestParam(required = true, defaultValue = "guest", value = "username") String username,
             @RequestParam(required = false, defaultValue = "-1", value = "age") int age) {
         log.info("username={}, age={}", username, age);
+        return "ok";
+    }
+
+
+    /**
+     * @RequestParam Map, MultiValueMap
+     * Map(key=value)
+     * MultiValueMap(key=[value1, value2, ...]) ex) (key=userIds, value=[id1, id2])
+     * 파라미터의 값이 1개가 확실하다면 `Map` 을 사용해도 되지만, 그렇지 않다면 `MultiValueMap` 을 사용하자
+     */
+    @ResponseBody
+    @RequestMapping("/request-param-map")
+    public String requestParamMap(@RequestParam Map<String, Object> paramMap) {
+        //아예 맵으로 받고 그냥 꺼내면 된다!!!!
+        log.info("username={}, age={}", paramMap.get("username"),
+                paramMap.get("age"));
         return "ok";
     }
 }
