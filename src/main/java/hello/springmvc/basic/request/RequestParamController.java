@@ -1,11 +1,13 @@
 package hello.springmvc.basic.request;
 
+import hello.springmvc.basic.HelloData;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -67,22 +69,21 @@ public class RequestParamController {
     @ResponseBody
     @RequestMapping("/request-param-required")
     public String requestParamRequired(@RequestParam(value = "username", required = true) String username,
-                                       @RequestParam(value = "age",required = false) Integer age
+                                       @RequestParam(value = "age", required = false) Integer age
                                        //int 에는 null 을 넣지 못해서 Integer 로 변경해야한다.
-                                       ) {
+    ) {
         //Required request parameter 'username' for method parameter type String is not present]
         //이런식으로 필수 값 빠뜨리면 에러가 난다.
 
 //        `/request-param-required?username=`
 //        파라미터 이름만 있고 값이 없는 경우 빈문자로 통과 -> null 이 아니라 빈문자라는 값으로 인식
 
-        log.info("username={}, age={}", username,age);
+        log.info("username={}, age={}", username, age);
         return "ok";
     }
 
     /**
-     * @RequestParam
-     * - defaultValue 사용 *
+     * @RequestParam - defaultValue 사용 *
      * 참고: defaultValue는 빈 문자의 경우에도 적용 * /request-param-default?username=
      */
     @ResponseBody
@@ -111,4 +112,43 @@ public class RequestParamController {
                 paramMap.get("age"));
         return "ok";
     }
+
+//    @ResponseBody
+//    @RequestMapping("/model-attribute-v1")
+//    public String modelAttributeV1(@RequestParam("username") String username,
+//                                   @RequestParam("age") int age) {
+//        HelloData helloData = new HelloData();
+//        helloData.setUsername(username);
+//        helloData.setAge(age);
+//
+//        log.info("username={}, age={}", helloData.getUsername(), helloData.getAge());
+//        log.info("helloData={}", helloData);
+//        return "ok";
+//    }
+    /**
+     * @ModelAttribute 사용
+     * 참고: model.addAttribute(helloData) 코드도 함께 자동 적용됨, 뒤에 model을 설명할 때 자세히
+    설명
+     */
+    @ResponseBody
+    @RequestMapping("/model-attribute-v1") //위에랑 똑같은 과정을 자동으로 해준다.
+    public String modelAttributeV1(@ModelAttribute HelloData helloData) {
+        log.info("username={}, age={}", helloData.getUsername(), helloData.getAge());
+        log.info("helloData={}", helloData);
+        return "ok";
+    }
+
+    /**
+     * @ModelAttribute 생략 가능
+     * String, int 같은 단순 타입 = @RequestParam
+     * argument resolver 로 지정해둔 타입 외 = @ModelAttribute
+     * */
+    @ResponseBody
+    @RequestMapping("/model-attribute-v2") //ModelAttribute 생략이 가능합니다!
+    public String modelAttributeV2(HelloData helloData) {
+        log.info("username={}, age={}", helloData.getUsername(),
+                helloData.getAge());
+        return "ok";
+    }
+
 }
