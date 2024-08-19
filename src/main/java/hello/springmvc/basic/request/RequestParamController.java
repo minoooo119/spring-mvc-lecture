@@ -62,4 +62,16 @@ public class RequestParamController {
 //        log.info("username={}, age={}", username, age);
 //        return "ok";
 //    }
+
+    @ResponseBody
+    @RequestMapping("/request-param-required")
+    public String requestParamRequired(@RequestParam(value = "username", required = true) String username,
+                                       @RequestParam(value = "age",required = false) Integer age
+                                       //int 에는 null 을 넣지 못해서 Integer 로 변경해야한다.
+                                       ) {
+        //Required request parameter 'username' for method parameter type String is not present]
+        //이런식으로 필수 값 빠뜨리면 에러가 난다.
+        log.info("username={}, age={}", username,age);
+        return "ok";
+    }
 }
