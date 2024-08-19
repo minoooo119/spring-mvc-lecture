@@ -71,7 +71,27 @@ public class RequestParamController {
                                        ) {
         //Required request parameter 'username' for method parameter type String is not present]
         //이런식으로 필수 값 빠뜨리면 에러가 난다.
+
+//        `/request-param-required?username=`
+//        파라미터 이름만 있고 값이 없는 경우 빈문자로 통과 -> null 이 아니라 빈문자라는 값으로 인식
+
         log.info("username={}, age={}", username,age);
+        return "ok";
+    }
+
+    /**
+     * @RequestParam
+     * - defaultValue 사용 *
+     * 참고: defaultValue는 빈 문자의 경우에도 적용 * /request-param-default?username=
+     */
+    @ResponseBody
+    @RequestMapping("/request-param-default")
+    public String requestParamDefault(
+//            이미 기본 값이 있기 때문에 `required` 는 의미가 없다.
+//            `defaultValue` 는 빈 문자의 경우에도 설정한 기본 값이 적용된다.
+            @RequestParam(required = true, defaultValue = "guest", value = "username") String username,
+            @RequestParam(required = false, defaultValue = "-1", value = "age") int age) {
+        log.info("username={}, age={}", username, age);
         return "ok";
     }
 }
