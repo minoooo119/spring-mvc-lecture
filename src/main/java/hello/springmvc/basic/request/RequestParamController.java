@@ -146,6 +146,10 @@ public class RequestParamController {
     @ResponseBody
     @RequestMapping("/model-attribute-v2") //ModelAttribute 생략이 가능합니다!
     public String modelAttributeV2(HelloData helloData) {
+        //query parameter 가 아니라 json 으로 하면 읽지를 못한다.
+        //현재 modelAttribute 이므로 query parameter 에 대해서 요청 파라미터에 담겨올때 사용한다.
+
+        //response body 에서 넘어오는 것은 responseBody 나 HttpEntity 를 활용해야 한다.
         log.info("username={}, age={}", helloData.getUsername(),
                 helloData.getAge());
         return "ok";
